@@ -8,15 +8,15 @@ def runsim(ndim, nlive, eff, outname):
   lbounds = -20*np.ones(ndim)
   diff = ubounds-lbounds
 
+  norm = np.log((2.0*np.pi)**(ndim*0.5)*np.prod(sig))
+
   def prior(theta):
     x = lbounds + diff*theta
     return x
 
   def logl(x):
-    like = -0.5*np.sum((x/sig)**2.0) - 0.5*np.log((2.0*np.pi)**ndim*np.prod(sig))
+    like = -0.5*np.sum((x/sig)**2.0) - norm
     return like
-
-  outname = "gaussChains/dim"+str(ndim) + "/n" + str(nlive) + "/e"+str(eff)+"_v"+ str(vnum)
 
   results = solve(LogLikelihood = logl, Prior = prior, n_dims = ndim, outputfiles_basename=outname, n_live_points = nlive, sampling_efficiency=eff, verbose=True, importance_nested_sampling=False, evidence_tolerance=0.00001)
 
